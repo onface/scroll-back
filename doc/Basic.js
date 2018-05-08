@@ -11,30 +11,26 @@ class Basic extends React.Component {
     componentDidMount() {
         const self = this
         self.scroll = new Scroll({
-            onReleaseStart: function () {
-                if (self.state.offsetY > 30) {
-                    self.scroll.closeStart(30)
-                    setTimeout(function () {
-                        console.log('close')
-                        self.scroll.closeStart()
-                    }, 1000)
-                    return true
-                }
+            onRelease: function (overflow) {
+                return true
             },
-            judgeStart: function (mount) {
-                let output = {
-                    isStart: self.state.offsetY + mount > 0,
-                    shouldMount: -self.state.offsetY
-                }
-                output.retard = function () {
-                    return output.shouldMount / self.refsScroll.offsetHeight
-                }
-                return output
-            },
-            judgeEnd: function (mount) {
+            overflow: function (mount) {
                 return {
-                    isEnd: self.state.offsetY + mount < (self.refsScroll.offsetHeight - self.refsContent.offsetHeight),
-                    shouldMount: (self.refsScroll.offsetHeight - self.refsContent.offsetHeight) - self.state.offsetY
+                    start: {
+                        over: Boolean(self.state.offsetY + mount > 0),
+                        distance: -self.state.offsetY
+                    },
+                    end: {
+                        over: Boolean(self.state.offsetY + mount < (self.refsScroll.offsetHeight - self.refsContent.offsetHeight)),
+                        distance: (self.refsScroll.offsetHeight - self.refsContent.offsetHeight) - self.state.offsetY
+                    },
+                    throttle: function (distance) {
+                        let min = 0.3
+                        let retard = 1 - (Math.abs(distance / self.refsScroll.offsetHeight) + min)
+
+                        console.log(retard)
+                        return retard
+                    }
                 }
             },
             onChange: function (mount) {

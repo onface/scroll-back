@@ -18,6 +18,7 @@
     "$username": "onface",
     "$repository": "scroll",
     "dependencies": {
+        "face-motion": "0.4.0",
         "motion-logic": "^0.3.0",
         "safe-extend": "^3.0.5"
     },
