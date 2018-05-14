@@ -12,35 +12,36 @@ class Basic extends React.Component {
         const self = this
         self.scroll = new Scroll({
             onRelease: function (overflow) {
-                if (overflow.start.distance < -30) {
-                    self.scroll.close(30)
-                    setTimeout(function () {
-                        self.scroll.close()
-                    }, 1000)
-                    return false
-                }
+                // if (overflow.start.distance < -30) {
+                //     self.scroll.close(30)
+                //     setTimeout(function () {
+                //         self.scroll.close()
+                //     }, 1000)
+                //     return false
+                // }
                 return true
             },
-            overflow: function (mount) {
+            padding: function (mount) {
                 return {
-                    start: {
-                        over: Boolean(self.state.offsetY + mount > 0),
-                        distance: -self.state.offsetY
-                    },
-                    end: {
-                        over: Boolean(self.state.offsetY + mount < (self.refsScroll.offsetHeight - self.refsContent.offsetHeight)),
-                        distance: (self.refsScroll.offsetHeight - self.refsContent.offsetHeight) - self.state.offsetY
-                    },
-                    throttle: function (distance) {
-                        let min = 0.5
-                        let retard = 1 - (Math.abs(distance / self.refsScroll.offsetHeight) + min)
-                        return retard
-                    }
+                    start: self.state.offsetY,
+                    end: self.refsScroll.offsetHeight - self.refsContent.offsetHeight - self.state.offsetY
                 }
             },
+            throttle: function (padding) {
+                var ratioOfPaddingToScroll = padding / self.refsScroll.offsetHeight
+                var min = 0.1
+                var max = 0.4
+                var diff = max - min
+                ratioOfPaddingToScroll = 1 - ratioOfPaddingToScroll
+                return min + (ratioOfPaddingToScroll * diff)
+            },
             onChange: function (mount) {
+                var offsetY = self.state.offsetY + mount
+                if (/e/.test(String(offsetY))) {
+                    offsetY = 0
+                }
                 self.setState({
-                    offsetY: self.state.offsetY + mount
+                    offsetY: offsetY
                 })
             }
         })
@@ -65,7 +66,7 @@ class Basic extends React.Component {
         return (
             <div className="basicDemo" >
                 <div className="scroll" ref={(node) => {self.refsScroll = node}}
-                    style={{border: '1px solid blue', height:'10em'}}
+                    style={{border: '1px solid blue', height:'20em'}}
                 >
                     <div
                         className="content"
@@ -76,9 +77,9 @@ class Basic extends React.Component {
                         }}
                      >
                          {self.state.offsetY}
-                        <div style={{borderLeft: '1px solid red'}} >
+                        <div >
                             <h1>h1</h1>
-                            <div style={{height: '20em'}}></div>
+                            <div style={{height: '150em', borderLeft: '11px dotted orange'}}></div>
                             <h3>h3</h3>
                         </div>
                         ...
