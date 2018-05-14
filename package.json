@@ -1,5 +1,5 @@
 {
-    "name": "scroll",
+    "name": "face-scroll",
     "main": "lib/index.js",
     "version": "0.1.0",
     "description": "Scroll",
