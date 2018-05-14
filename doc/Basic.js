@@ -1,5 +1,5 @@
 var React = require('react')
-var Scroll = require('scroll')
+var Scroll = require('face-scroll')
 class Basic extends React.Component {
     constructor(props) {
         super(props)
