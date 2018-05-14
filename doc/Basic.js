@@ -12,6 +12,13 @@ class Basic extends React.Component {
         const self = this
         self.scroll = new Scroll({
             onRelease: function (overflow) {
+                if (overflow.start.distance < -30) {
+                    self.scroll.close(30)
+                    setTimeout(function () {
+                        self.scroll.close()
+                    }, 1000)
+                    return false
+                }
                 return true
             },
             overflow: function (mount) {
@@ -25,10 +32,8 @@ class Basic extends React.Component {
                         distance: (self.refsScroll.offsetHeight - self.refsContent.offsetHeight) - self.state.offsetY
                     },
                     throttle: function (distance) {
-                        let min = 0.3
+                        let min = 0.5
                         let retard = 1 - (Math.abs(distance / self.refsScroll.offsetHeight) + min)
-
-                        console.log(retard)
                         return retard
                     }
                 }
@@ -71,8 +76,11 @@ class Basic extends React.Component {
                         }}
                      >
                          {self.state.offsetY}
-                        ...
-                        <div style={{height: '24em', borderLeft: '1px solid red'}} ></div>
+                        <div style={{borderLeft: '1px solid red'}} >
+                            <h1>h1</h1>
+                            <div style={{height: '20em'}}></div>
+                            <h3>h3</h3>
+                        </div>
                         ...
                     </div>
                 </div>
