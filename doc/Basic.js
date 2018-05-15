@@ -5,57 +5,55 @@ class Basic extends React.Component {
         super(props)
         const self = this
         self.state = {
-            offsetY: 0
+            offsetY: 0,
+            padding: {
+                start:null,
+                end: null,
+            }
         }
     }
     componentDidMount() {
         const self = this
         self.scroll = new Scroll({
-            onRelease: function (overflow) {
-                // if (overflow.start.distance < -30) {
-                //     self.scroll.close(30)
-                //     setTimeout(function () {
-                //         self.scroll.close()
-                //     }, 1000)
-                //     return false
-                // }
+            onRelease: function (padding) {
                 return true
             },
             padding: function (mount) {
                 return {
-                    start: self.state.offsetY,
-                    end: self.refsScroll.offsetHeight - self.refsContent.offsetHeight - self.state.offsetY
+                    start: self.state.offsetY + mount,
+                    end: (self.$refs.scroll.getBoundingClientRect().bottom - self.$refs.scroll.getBoundingClientRect().top) - (self.$refs.content.getBoundingClientRect().bottom - self.$refs.content.getBoundingClientRect().top) - self.state.offsetY + mount
                 }
             },
             throttle: function (padding) {
-                var ratioOfPaddingToScroll = padding / self.refsScroll.offsetHeight
+                var ratioOfPaddingToScroll = padding / self.$refs.scroll.offsetHeight
                 var min = 0.1
                 var max = 0.4
                 var diff = max - min
                 ratioOfPaddingToScroll = 1 - ratioOfPaddingToScroll
                 return min + (ratioOfPaddingToScroll * diff)
             },
-            onChange: function (mount) {
+            onChange: function (mount, padding) {
                 var offsetY = self.state.offsetY + mount
                 if (/e/.test(String(offsetY))) {
                     offsetY = 0
                 }
                 self.setState({
-                    offsetY: offsetY
+                    offsetY: offsetY,
+                    padding: padding
                 })
             }
         })
-        self.refsScroll.addEventListener('touchstart', function (e) {
+        self.$refs.scroll.addEventListener('touchstart', function (e) {
             e.preventDefault()
             e.stopPropagation()
             self.scroll.touchStart(e.touches[0].clientY)
         })
-        self.refsScroll.addEventListener('touchmove', function (e) {
+        self.$refs.scroll.addEventListener('touchmove', function (e) {
             e.preventDefault()
             e.stopPropagation()
             self.scroll.touchMove(e.touches[0].clientY)
         })
-        self.refsScroll.addEventListener('touchend', function (e) {
+        self.$refs.scroll.addEventListener('touchend', function (e) {
             e.preventDefault()
             e.stopPropagation()
             self.scroll.touchEnd()
@@ -65,24 +63,24 @@ class Basic extends React.Component {
         const self = this
         return (
             <div className="basicDemo" >
-                <div className="scroll" ref={(node) => {self.refsScroll = node}}
-                    style={{border: '1px solid blue', height:'20em'}}
+                <pre>{JSON.stringify(self.state.padding,null, 4)}</pre>
+                <div className="scroll" ref={(node) => {self.$refs = self.$refs || {};self.$refs.scroll = node}}
+                    style={{background: 'skyblue', height:'20em', overflow: 'hidden'}}
                 >
                     <div
                         className="content"
-                        ref={(node) => {self.refsContent = node}}
+                        ref={(node) => {self.$refs = self.$refs || {};self.$refs.content = node}}
                         style={{
                             transform: `translateX(0px) translateY(${self.state.offsetY}px) translateZ(0px)`,
-                            border: '1px solid orange'
+                            background: 'orange'
                         }}
                      >
                          {self.state.offsetY}
                         <div >
-                            <h1>h1</h1>
-                            <div style={{height: '150em', borderLeft: '11px dotted orange'}}></div>
-                            <h3>h3</h3>
+                            <h1>start</h1>
+                            <img src="https://picsum.photos/100/2000" alt=""/>
+                            <h3>end</h3>
                         </div>
-                        ...
                     </div>
                 </div>
             </div>
