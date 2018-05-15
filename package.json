@@ -1,7 +1,7 @@
 {
     "name": "face-scroll",
     "main": "lib/index.js",
-    "version": "0.2.0",
+    "version": "0.2.2",
     "description": "Scroll",
     "keywords": "",
     "scripts": {

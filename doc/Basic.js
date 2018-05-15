@@ -19,9 +19,11 @@ class Basic extends React.Component {
                 return true
             },
             padding: function (mount) {
+                var scrollHeight = (self.$refs.scroll.getBoundingClientRect().bottom - self.$refs.scroll.getBoundingClientRect().top)
+                var contentHeight = (self.$refs.content.getBoundingClientRect().bottom - self.$refs.content.getBoundingClientRect().top)
                 return {
                     start: self.state.offsetY + mount,
-                    end: (self.$refs.scroll.getBoundingClientRect().bottom - self.$refs.scroll.getBoundingClientRect().top) - (self.$refs.content.getBoundingClientRect().bottom - self.$refs.content.getBoundingClientRect().top) - self.state.offsetY + mount
+                    end: scrollHeight - contentHeight - self.state.offsetY + mount
                 }
             },
             throttle: function (padding) {
@@ -78,7 +80,7 @@ class Basic extends React.Component {
                          {self.state.offsetY}
                         <div >
                             <h1>start</h1>
-                            <img src="https://picsum.photos/100/2000" alt=""/>
+                            <img src="https://picsum.photos/100/200" alt=""/>
                             <h3>end</h3>
                         </div>
                     </div>
